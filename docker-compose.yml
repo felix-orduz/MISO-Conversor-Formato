@@ -23,5 +23,30 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  minio:
+    image: minio/minio:RELEASE.2023-10-16T04-13-43Z.fips
+    command: server /data --console-address ":9090"
+    ports:
+      - "9000:9000"
+      - "9090:9090"
+    environment:
+      MINIO_ACCESS_KEY: minioaccesskey
+      MINIO_SECRET_KEY: miniosecretkey
+    volumes:
+      - minio-data:/data
+
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set myminio http://minio:9000 minioaccesskey miniosecretkey;
+      /usr/bin/mc mb myminio/test000;
+      /usr/bin/mc policy set public myminio/test000;
+      exit 0;
+      "
+
 volumes:
   postgres_data:
+  minio-data:

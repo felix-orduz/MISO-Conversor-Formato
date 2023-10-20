@@ -21,5 +21,9 @@ curl -X POST \
 ```bash
 curl -X GET \
   http://127.0.0.1:5001/api/tasks \
-  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5Nzc2Mjc4MCwianRpIjoiODAxMmI5OGUtZTBiNS00NWFmLWJmYWEtMmY0NWZhN2FhYzlkIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImZvcmR1eiIsIm5iZiI6MTY5Nzc2Mjc4MCwiZXhwIjoxNjk3NzYzNjgwfQ.hR_Pp7M5si76xoxp6nhV_G2MawVIhOVwh7P-bT-n3as'
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5NzgyNzIzNSwianRpIjoiMzBlMTQ0YmItY2EyOC00OTExLThhYjktZTI0OTg0Njk2YWRjIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImZvcmR1eiIsIm5iZiI6MTY5NzgyNzIzNSwiZXhwIjoxNjk3ODI4MTM1fQ.KhqcuFJNYaYLSTm9TTL4-fiQ4LEO4DkbEy-iStlmVmQ'
+```
+
+```bash
+curl -X POST -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5NzgzMzY0NCwianRpIjoiMjRhNTRjMWYtODU3ZS00ZjU2LTk1NTEtZTExN2EzMzNkNzZhIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImZvcmR1eiIsIm5iZiI6MTY5NzgzMzY0NCwiZXhwIjoxNjk3ODM0NTQ0fQ.QWGLqiCdbzjPily2H7w0sm9LJIvpaTvVrtrq0X8NCyE"  -F "file=@/Users/felixernestoorduzgrimaldo/Downloads/file_example_MP4_480_1_5MG.mp4" -F "newFormat=avi" http://localhost:5001/api/tasks
 ```
