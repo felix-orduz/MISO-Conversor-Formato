@@ -1,0 +1,30 @@
+# Archivos y directorios generados por Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Entorno virtual (si lo utilizas)
+venv/
+
+# Archivos de registro y caché de aplicaciones Flask
+logs/
+*.log
+
+# Archivos de configuración local (si los tienes)
+instance/
+
+# Dependencias y archivos generados por pip
+requirements.txt
+*.pip
+*.egg
+*.egg-info
+
+# Archivos de sistema y caché
+.DS_Store
+Thumbs.db
+
+# Archivos y directorios generados por sistemas de construcción
+node_modules/
+dist/
