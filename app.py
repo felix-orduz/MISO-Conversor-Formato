@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from models.models import db, User, Task
 from resources.signup import SignUp
 from resources.login import Login
+from resources.tasks import Tasks
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
@@ -26,9 +27,8 @@ class HelloWorld(Resource):
 
 api.add_resource(HelloWorld, '/')
 api.add_resource(SignUp, '/api/auth/signup')
-
 api.add_resource(Login, '/api/auth/login')
-
+api.add_resource(Tasks, '/api/tasks')
 if __name__ == '__main__':
     print(f"Debug xx mode: {'on' if app.debug else 'off'}")
     app.run(debug=True)
