@@ -1,1 +1,15 @@
 
+version: '3.8'
+
+services:
+  web:
+    image: ghcr.io/felix-orduz/misw4204-test-feog:latest
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_ENV: development
+      DATABASE_URL: postgresql://postgres:%3A%7Cy%2A96%23MbR0pV%3AU%2B@35.223.167.21:5432/conversor
+
+
+
+

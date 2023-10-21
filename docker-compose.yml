@@ -3,7 +3,6 @@ version: '3.8'
 services:
   web:
     build: .
-    command: flask run --host=0.0.0.0
     ports:
       - "5001:5000"
     environment:
@@ -34,18 +33,6 @@ services:
       MINIO_SECRET_KEY: miniosecretkey
     volumes:
       - minio-data:/data
-
-  createbuckets:
-    image: minio/mc
-    depends_on:
-      - minio
-    entrypoint: >
-      /bin/sh -c "
-      /usr/bin/mc alias set myminio http://minio:9000 minioaccesskey miniosecretkey;
-      /usr/bin/mc mb myminio/test000;
-      /usr/bin/mc policy set public myminio/test000;
-      exit 0;
-      "
 
 volumes:
   postgres_data:
