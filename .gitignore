@@ -16,7 +16,6 @@ logs/
 instance/
 
 # Dependencias y archivos generados por pip
-requirements.txt
 *.pip
 *.egg
 *.egg-info
