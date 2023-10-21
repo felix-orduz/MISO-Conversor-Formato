@@ -25,5 +25,23 @@ curl -X GET \
 ```
 
 ```bash
-curl -X POST -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5NzgzMzY0NCwianRpIjoiMjRhNTRjMWYtODU3ZS00ZjU2LTk1NTEtZTExN2EzMzNkNzZhIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImZvcmR1eiIsIm5iZiI6MTY5NzgzMzY0NCwiZXhwIjoxNjk3ODM0NTQ0fQ.QWGLqiCdbzjPily2H7w0sm9LJIvpaTvVrtrq0X8NCyE"  -F "file=@/Users/felixernestoorduzgrimaldo/Downloads/file_example_MP4_480_1_5MG.mp4" -F "newFormat=avi" http://localhost:5001/api/tasks
+curl -X POST -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5Nzg0NTA3OSwianRpIjoiZGVlM2NiMjYtYWJjMC00NDNhLThlM2EtYjgyNDI4MTY2ZWUxIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImZvcmR1eiIsIm5iZiI6MTY5Nzg0NTA3OSwiZXhwIjoxNjk3ODQ1OTc5fQ.PL2VwZ7fB0Awg3uknrZpFCvNWGeJ6keoP2qAWeH7tZI"  -F "file=@/Users/felixernestoorduzgrimaldo/Downloads/file_example_MP4_480_1_5MG.mp4" -F "newFormat=avi" http://localhost:5001/api/tasks
 ```
+
+```bash
+curl -X GET \
+     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5Nzg0NTA3OSwianRpIjoiZGVlM2NiMjYtYWJjMC00NDNhLThlM2EtYjgyNDI4MTY2ZWUxIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImZvcmR1eiIsIm5iZiI6MTY5Nzg0NTA3OSwiZXhwIjoxNjk3ODQ1OTc5fQ.PL2VwZ7fB0Awg3uknrZpFCvNWGeJ6keoP2qAWeH7tZI" \
+     http://localhost:5001/api/tasks/1
+```
+
+```bash
+curl -X GET \
+     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5Nzg0NTA3OSwianRpIjoiZGVlM2NiMjYtYWJjMC00NDNhLThlM2EtYjgyNDI4MTY2ZWUxIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImZvcmR1eiIsIm5iZiI6MTY5Nzg0NTA3OSwiZXhwIjoxNjk3ODQ1OTc5fQ.PL2VwZ7fB0Awg3uknrZpFCvNWGeJ6keoP2qAWeH7tZI" \
+     http://localhost:5001/api/tasks
+```
+
+```bash
+curl -X DELETE \
+     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5Nzg0NTA3OSwianRpIjoiZGVlM2NiMjYtYWJjMC00NDNhLThlM2EtYjgyNDI4MTY2ZWUxIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImZvcmR1eiIsIm5iZiI6MTY5Nzg0NTA3OSwiZXhwIjoxNjk3ODQ1OTc5fQ.PL2VwZ7fB0Awg3uknrZpFCvNWGeJ6keoP2qAWeH7tZI" \
+     http://localhost:5001/api/tasks/1
+``````

@@ -73,3 +73,61 @@ class Tasks(Resource):
         db.session.commit()
 
         return {"message": "Tarea creada exitosamente"}, 201  # 201 significa "Created"
+
+    @jwt_required()
+    def get(self, id_task=None):
+        current_username = get_jwt_identity()  # Obtén el username del token JWT
+        user = User.query.filter_by(username=current_username).first()
+
+        if user is None:
+            return {"message": "Usuario no encontrado"}, 404
+
+        # Si se proporciona id_task, recupera la tarea específica
+        if id_task:
+            task = Task.query.filter_by(id=id_task, user_id=user.id).first()
+
+            if task is None:
+                return {"message": "Tarea no encontrada"}, 404
+
+            # Genera las URLs para recuperar/descargar los archivos
+            original_file_url = f"http://localhost:5001/files/{task.originalFileName}"
+            processed_file_url = f"http://localhost:5001/files/{task.storedFileName}"
+
+            task_info = {
+                "id": task.id,
+                "user_id": task.user_id,
+                "timestamp": task.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+                "original_file_url": original_file_url,
+                "processed_file_url": processed_file_url
+            }
+
+            return task_info, 200
+
+        # Si no se proporciona id_task, devuelve la lista de tareas
+        else:
+            tasks = Task.query.filter_by(user_id=user.id).all()
+            tasks_list = [
+                {"id": task.id, "user_id": task.user_id, "timestamp": task.timestamp.strftime("%Y-%m-%d %H:%M:%S")}
+                for task in tasks
+            ]
+
+            return tasks_list, 200
+
+    @jwt_required()
+    def delete(self, id_task):
+        current_username = get_jwt_identity()  # Obtén el username del token JWT
+        user = User.query.filter_by(username=current_username).first()
+
+        if user is None:
+            return {"message": "Usuario no encontrado"}, 404
+
+        task = Task.query.filter_by(id=id_task, user_id=user.id).first()
+
+        if task is None:
+            return {"message": "Tarea no encontrada"}, 404
+
+        # Elimina la tarea de la base de datos
+        db.session.delete(task)
+        db.session.commit()
+
+        return {}, 204  # 204 significa "No Content", usado para respuestas exitosas sin contenido
