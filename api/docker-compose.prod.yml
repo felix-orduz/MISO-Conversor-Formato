@@ -8,7 +8,11 @@ services:
       - "5000:5000"
     environment:
       FLASK_ENV: development
-      DATABASE_URL: postgresql://postgres:%3A%7Cy%2A96%23MbR0pV%3AU%2B@35.223.167.21:5432/conversor
+      DATABASE_URL: ${DATABASE_URL}
+      SAVE_PATH: /file_conversor/uploaded/
+    volumes:
+      - "$HOME/file_conversor/uploaded/:/file_conversor/uploaded/"
+
 
 
 

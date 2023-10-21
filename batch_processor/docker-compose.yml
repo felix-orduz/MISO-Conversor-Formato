@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+
+  worker:
+    build: .
+    volumes:
+      - .:/app
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - web
+      - redis
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"

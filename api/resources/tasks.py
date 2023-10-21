@@ -44,7 +44,7 @@ class Tasks(Resource):
         unique_filename = str(uuid.uuid4()) + file_extension
 
         # Usa el nombre único con extensión al guardar
-        save_path = os.path.join("/Users/felixernestoorduzgrimaldo/Documents/Estudio/MISO/test_temp/", unique_filename)
+        save_path = os.path.join(os.environ.get('SAVE_PATH', '/file_conversor/uploaded/'), unique_filename)
 
         # Guarda el archivo en la ruta especificada
         uploaded_file.save(save_path)
@@ -125,6 +125,9 @@ class Tasks(Resource):
 
         if task is None:
             return {"message": "Tarea no encontrada"}, 404
+
+        if task.status is not 'processed':
+            return {"message": "Tarea no esta en estado processed"}, 400
 
         # Elimina la tarea de la base de datos
         db.session.delete(task)
