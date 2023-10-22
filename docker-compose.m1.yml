@@ -2,9 +2,9 @@ version: '3.8'
 
 services:
   web:
-    image: ghcr.io/felix-orduz/misw4204-web:latest
+    image: ghcr.io/felix-orduz/misw4204-web:latest-m1
     ports:
-      - "5000:5000"
+      - "5001:5000"
     environment:
       FLASK_ENV: development
       DATABASE_URL: postgresql://postgres:postgrespwd@db:5432/conversor
@@ -31,29 +31,33 @@ services:
       - "6379:6379"
 
   batch_processor :
-    image: ghcr.io/felix-orduz/misw4204-batch:latest
+    image: ghcr.io/felix-orduz/misw4204-batch:latest-m1
     environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+      DATABASE_URL: postgresql://postgres:postgrespwd@db:5432/conversor
     depends_on:
       - web
       - redis
       - db
 
   worker :
-    image: ghcr.io/felix-orduz/misw4204-worker:latest
+    image: ghcr.io/felix-orduz/misw4204-worker:latest-m1
     environment:
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
+      DATABASE_URL: postgresql://postgres:postgrespwd@db:5432/conversor
       SAVE_PATH: /file_conversor/uploaded/
       CONVERT_PATH: /file_conversor/processed/
     depends_on:
       - web
       - redis
       - db
+      - batch_processor
     volumes:
       - "$HOME/file_conversor/uploaded/:/file_conversor/uploaded/"
       - "$HOME/file_conversor/processed/:/file_conversor/processed/"
 
 volumes:
   postgres_data:
+

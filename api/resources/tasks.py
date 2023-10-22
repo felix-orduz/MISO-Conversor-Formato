@@ -126,7 +126,7 @@ class Tasks(Resource):
         if task is None:
             return {"message": "Tarea no encontrada"}, 404
 
-        if task.status is not 'processed':
+        if task.status != 'processed':
             return {"message": "Tarea no esta en estado processed"}, 400
 
         # Elimina la tarea de la base de datos
