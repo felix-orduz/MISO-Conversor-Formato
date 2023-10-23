@@ -36,9 +36,10 @@ def process_task_from_queue(task_data):
     stmt = (
         update(task_table).
         where(task_table.c.id == task_data["id"]).
-        values(status='processed', storedFileName=converted_file_name)
+        values(status='processed')
     )
     conn.execute(stmt)
+    conn.commit()
     conn.close()
 
 if __name__ == "__main__":

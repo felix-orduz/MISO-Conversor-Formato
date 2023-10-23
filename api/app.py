@@ -8,6 +8,7 @@ from models.models import db, User, Task
 from resources.signup import SignUp
 from resources.login import Login
 from resources.tasks import Tasks
+from resources.files import Files
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
@@ -23,8 +24,9 @@ api = Api(app)
 
 api.add_resource(SignUp, '/api/auth/signup')
 api.add_resource(Login, '/api/auth/login')
-
 api.add_resource(Tasks, '/api/tasks', '/api/tasks/<int:id_task>')
+api.add_resource(Files, '/files/<string:filetype>/<string:filename>')
+
 if __name__ == '__main__':
     print(f"Debug xx mode: {'on' if app.debug else 'off'}")
     app.run(debug=True)

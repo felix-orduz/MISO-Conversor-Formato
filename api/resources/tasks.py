@@ -39,9 +39,9 @@ class Tasks(Resource):
             return {"message": "El archivo está vacío."}, 400
 
         _, file_extension = os.path.splitext(uploaded_file.filename)
-
+        unique_uuid = str(uuid.uuid4())
         # Genera un ID único para el archivo y concatena la extensión
-        unique_filename = str(uuid.uuid4()) + file_extension
+        unique_filename = unique_uuid + file_extension
 
         # Usa el nombre único con extensión al guardar
         save_path = os.path.join(os.environ.get('SAVE_PATH', '/file_conversor/uploaded/'), unique_filename)
@@ -57,7 +57,6 @@ class Tasks(Resource):
         current_username = get_jwt_identity()  # Obtén el username del token JWT
         user = User.query.filter_by(username=current_username).first()
 
-
         # Crea una nueva tarea
         new_task = Task(
             user_id=user.id,
@@ -72,12 +71,25 @@ class Tasks(Resource):
         db.session.add(new_task)
         db.session.commit()
 
-        return {"message": "Tarea creada exitosamente"}, 201  # 201 significa "Created"
+        server_uri = os.environ.get('SERVER_URI', 'http://localhost:5001/')
+        original_file_url = f"{server_uri}files/original/{new_task.storedFileName}"
+        processed_file_url = f"{server_uri}files/processed/{unique_uuid}.{new_task.newFormat}"
+
+        task_info = {
+            "id": new_task.id,
+            "user_id": new_task.user_id,
+            "timestamp": new_task.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+            "original_file_url": original_file_url,
+            "processed_file_url": processed_file_url
+        }
+
+        return task_info, 201  # 201 significa "Created"
 
     @jwt_required()
     def get(self, id_task=None):
         current_username = get_jwt_identity()  # Obtén el username del token JWT
         user = User.query.filter_by(username=current_username).first()
+        server_uri = os.environ.get('SERVER_URI', 'http://localhost:5001/')
 
         if user is None:
             return {"message": "Usuario no encontrado"}, 404
@@ -90,8 +102,9 @@ class Tasks(Resource):
                 return {"message": "Tarea no encontrada"}, 404
 
             # Genera las URLs para recuperar/descargar los archivos
-            original_file_url = f"http://localhost:5001/files/{task.originalFileName}"
-            processed_file_url = f"http://localhost:5001/files/{task.storedFileName}"
+            original_file_url = f"{server_uri}files/original/{task.storedFileName}"
+            filename,_ = os.path.splitext(task.storedFileName)
+            processed_file_url = f"{server_uri}files/processed/{filename}.{task.newFormat}"
 
             task_info = {
                 "id": task.id,
@@ -106,10 +119,21 @@ class Tasks(Resource):
         # Si no se proporciona id_task, devuelve la lista de tareas
         else:
             tasks = Task.query.filter_by(user_id=user.id).all()
-            tasks_list = [
-                {"id": task.id, "user_id": task.user_id, "timestamp": task.timestamp.strftime("%Y-%m-%d %H:%M:%S")}
-                for task in tasks
-            ]
+
+            tasks_list = []
+            for task in tasks:
+                original_file_url = f"{server_uri}files/original/{task.storedFileName}"
+                filename, _ = os.path.splitext(task.storedFileName)
+                processed_file_url = f"{server_uri}files/processed/{filename}.{task.newFormat}"
+
+                task_dict = {
+                    "id": task.id,
+                    "user_id": task.user_id,
+                    "timestamp": task.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+                    "original_file_url": original_file_url,
+                    "processed_file_url": processed_file_url
+                }
+                tasks_list.append(task_dict)
 
             return tasks_list, 200
 

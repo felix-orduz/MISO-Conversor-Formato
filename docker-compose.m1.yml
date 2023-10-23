@@ -9,10 +9,13 @@ services:
       FLASK_ENV: development
       DATABASE_URL: postgresql://postgres:postgrespwd@db:5432/conversor
       SAVE_PATH: /file_conversor/uploaded/
+      SERVER_URI: http://localhost:5001/
+      CONVERT_PATH: /file_conversor/processed/
     depends_on:
       - db
     volumes:
       - "$HOME/file_conversor/uploaded/:/file_conversor/uploaded/"
+      - "$HOME/file_conversor/processed/:/file_conversor/processed/"
 
   db:
     image: postgres:alpine3.18
