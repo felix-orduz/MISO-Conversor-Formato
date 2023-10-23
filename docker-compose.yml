@@ -9,7 +9,7 @@ services:
       FLASK_ENV: development
       DATABASE_URL: postgresql://postgres:postgrespwd@db:5432/conversor
       SAVE_PATH: /file_conversor/uploaded/
-      SERVER_URI: ec2-54-234-234-88.compute-1.amazonaws.com/
+      SERVER_URI: http://ec2-54-234-234-88.compute-1.amazonaws.com:5000/
       CONVERT_PATH: /file_conversor/processed/
     depends_on:
       - db
