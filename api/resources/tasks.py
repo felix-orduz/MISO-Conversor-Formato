@@ -80,7 +80,8 @@ class Tasks(Resource):
             "user_id": new_task.user_id,
             "timestamp": new_task.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
             "original_file_url": original_file_url,
-            "processed_file_url": processed_file_url
+            "processed_file_url": processed_file_url,
+            "status":new_task.status
         }
 
         return task_info, 201  # 201 significa "Created"
@@ -111,7 +112,8 @@ class Tasks(Resource):
                 "user_id": task.user_id,
                 "timestamp": task.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
                 "original_file_url": original_file_url,
-                "processed_file_url": processed_file_url
+                "processed_file_url": processed_file_url,
+                "status":task.status
             }
 
             return task_info, 200
@@ -131,7 +133,8 @@ class Tasks(Resource):
                     "user_id": task.user_id,
                     "timestamp": task.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
                     "original_file_url": original_file_url,
-                    "processed_file_url": processed_file_url
+                    "processed_file_url": processed_file_url,
+                    "status":task.status
                 }
                 tasks_list.append(task_dict)
 
