@@ -10,6 +10,13 @@ from resources.login import Login
 from resources.tasks import Tasks
 from resources.files import Files
 
+
+# Definición de la clase Ping
+class Ping(Resource):
+    def get(self):
+        return {'message': 'pong'}, 200
+
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['DEBUG'] = True
@@ -26,6 +33,7 @@ api.add_resource(SignUp, '/api/auth/signup')
 api.add_resource(Login, '/api/auth/login')
 api.add_resource(Tasks, '/api/tasks', '/api/tasks/<int:id_task>')
 api.add_resource(Files, '/files/<string:filetype>/<string:filename>')
+api.add_resource(Ping, '/ping')
 
 if __name__ == '__main__':
     print(f"Debug xx mode: {'on' if app.debug else 'off'}")
