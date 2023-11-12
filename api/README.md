@@ -50,3 +50,5 @@ curl -X DELETE \
 
 
 export FILE_SAVE_PATH=$HOME/file_conversor/uploaded/
+export GCP_BUCKET_NAME="miso-4204-feog-exp1
+"

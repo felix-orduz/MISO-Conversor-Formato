@@ -13,3 +13,4 @@ class Files(Resource):
             return {"message": "Tipo de archivo no válido."}, 400
 
         return send_from_directory(path, filename, as_attachment=True)
+

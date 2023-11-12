@@ -10,6 +10,7 @@ services:
       FLASK_ENV: development
       DATABASE_URL: ${DATABASE_URL}
       SAVE_PATH: /file_conversor/uploaded/
+      GCP_BUCKET_NAME: miso-4204-feog-exp1
     volumes:
       - "$HOME/file_conversor/uploaded/:/file_conversor/uploaded/"
 

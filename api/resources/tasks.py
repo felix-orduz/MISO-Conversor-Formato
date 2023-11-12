@@ -5,6 +5,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from models.models import Task, User, db
 from flask_jwt_extended import jwt_required
 from datetime import datetime
+from resources.gcpfiles import GCPFiles
 import os
 
 class Tasks(Resource):
@@ -47,7 +48,12 @@ class Tasks(Resource):
         save_path = os.path.join(os.environ.get('SAVE_PATH', '/file_conversor/uploaded/'), unique_filename)
 
         # Guarda el archivo en la ruta especificada
-        uploaded_file.save(save_path)
+        #uploaded_file.save(save_path)
+
+        # Crear instancia de GCPFiles y subir el archivo
+        file = request.files['file']
+        gcp_files = GCPFiles()
+        gcp_files.upload_file(file, unique_filename)
 
         # Parsea los parámetros de la solicitud
         parser = reqparse.RequestParser()
