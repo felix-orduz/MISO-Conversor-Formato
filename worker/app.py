@@ -29,15 +29,15 @@ def callback(message):
     try:
         # Decodificar de bytes a string
         message_str = message.data.decode("utf-8")
+        task_data = ast.literal_eval(message_str)
+        # # Si ya es un diccionario, úsalo directamente
+        # if isinstance(message_str, dict):
 
-        # Si ya es un diccionario, úsalo directamente
-        if isinstance(message_str, dict):
-            task_data = ast.literal_eval(message_str)
-        # Intenta decodificar como JSON si los datos son un string
-        elif isinstance(message_str, str):
-            task_data = json.loads(message_str)
-        else:
-            raise ValueError("Formato de mensaje no reconocido")
+        # # Intenta decodificar como JSON si los datos son un string
+        # elif isinstance(message_str, str):
+        #     task_data = json.loads(message_str)
+        # else:
+        #     raise ValueError("Formato de mensaje no reconocido")
 
         process_task_from_queue.delay(task_data)
         message.ack()
