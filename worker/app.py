@@ -76,10 +76,11 @@ def convert_file_format(storedFileName, newFormat):
     ffmpeg.run(stream)
 
     destination_blob_name = f"processed/{file_name}.{newFormat}"
-    bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(destination_blob_name)
 
-    blob.upload_from_file(output_file)
+    with open(output_file, 'rb') as file_obj:
+        blob.upload_from_file(file_obj)
+
 
     return output_file
 
