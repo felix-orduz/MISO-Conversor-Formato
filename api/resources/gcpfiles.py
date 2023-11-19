@@ -8,7 +8,7 @@ class GCPFiles(Resource):
     def __init__(self):
         self.client = storage.Client()
 
-        self.bucket_key = os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "file.json"
+        self.bucket_key = os.environ.get["GOOGLE_APPLICATION_CREDENTIALS", 'key.json']
         self.bucket_name = os.environ.get('GCP_BUCKET_NAME', 'miso-4204-feog-exp1')
 
     def get(self, filetype, filename):
