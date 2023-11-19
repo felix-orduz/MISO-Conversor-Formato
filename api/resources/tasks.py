@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse
 import uuid
 from flask import request
+from google.cloud import pubsub_v1
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models.models import Task, User, db
 from flask_jwt_extended import jwt_required
@@ -80,6 +81,21 @@ class Tasks(Resource):
         server_uri = os.environ.get('SERVER_URI', 'http://localhost:5001/')
         original_file_url = f"{server_uri}files/uploaded/{new_task.storedFileName}"
         processed_file_url = f"{server_uri}files/processed/{unique_uuid}.{new_task.newFormat}"
+
+        publisher = pubsub_v1.PublisherClient()
+        project_id = "estudio-gcp-301920"
+        topic_name = "video_converter"
+        topic_path = publisher.topic_path(project_id, topic_name)
+
+        # Prepara el mensaje para Pub/Sub
+        message = {
+            "id": new_task.id,
+            "storedFileName": new_task.storedFileName,
+            "newFormat": new_task.newFormat
+        }
+
+        # Publica el mensaje en Pub/Sub
+        publisher.publish(topic_path, data=str(message).encode("utf-8"))
 
         task_info = {
             "id": new_task.id,
