@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  web:
+    restart: always
+    image: ghcr.io/felix-orduz/misw4204-web:latest
+    ports:
+      - "80:5000"
+    environment:
+      FLASK_ENV: development
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:5432/conversor
+      SAVE_PATH: /file_conversor/uploaded/
+      SERVER_URI: http://34.30.209.214/
+      CONVERT_PATH: /file_conversor/processed/
+      GOOGLE_APPLICATION_CREDENTIALS: /opt/key.json
+    volumes:
+      - "/opt/convertidor_nfs/uploaded/:/file_conversor/uploaded/"
+      - "/opt/convertidor_nfs/processed/:/file_conversor/processed/"
+      - "/home/felix_orduz/key.json:/opt/key.json"
