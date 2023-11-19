@@ -24,6 +24,7 @@ subscription_path = subscriber.subscription_path("estudio-gcp-301920", "video_co
 
 def callback(message):
     print(f"Recibido mensaje: {message}")
+    print(f"mensaje Data: {message.data}")
     try:
         # Intenta decodificar como JSON si los datos son un string
         if isinstance(message.data, str):
