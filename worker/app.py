@@ -57,8 +57,10 @@ def convert_file_format(storedFileName, newFormat):
     bucket = storage_client.bucket(bucket_name)
 
     # Ruta del archivo original en el bucket
-    blob_input = bucket.blob(f"uploaded/{storedFileName}")
+    file_path = f"uploaded/{storedFileName}"
+    blob_input = bucket.blob(file_path)
     input_file = f"/tmp/{storedFileName}"
+
     # Descargar el archivo a un directorio temporal
     blob_input.download_to_filename(input_file)
 
