@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, MetaData, Table, update
 import os
 import ffmpeg
 from google.cloud import storage
-
+import json
 
 # Configuración de Celery
 BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379/0')
