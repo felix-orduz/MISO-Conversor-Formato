@@ -60,7 +60,7 @@ def convert_file_format(storedFileName, newFormat):
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(destination_blob_name)
 
-    blob.upload_from_file(file)
+    blob.upload_from_file(output_file)
 
     return output_file
 
