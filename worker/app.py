@@ -30,12 +30,12 @@ def callback(message):
         # Decodificar de bytes a string
         message_str = message.data.decode("utf-8")
 
-        # Intenta decodificar como JSON si los datos son un string
-        if isinstance(message_str, str):
-            task_data = json.loads(message_str)
         # Si ya es un diccionario, úsalo directamente
-        elif isinstance(message_str, dict):
+        if isinstance(message_str, dict):
             task_data = ast.literal_eval(message_str)
+        # Intenta decodificar como JSON si los datos son un string
+        elif isinstance(message_str, str):
+            task_data = json.loads(message_str)
         else:
             raise ValueError("Formato de mensaje no reconocido")
 
