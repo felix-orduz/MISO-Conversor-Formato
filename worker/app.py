@@ -24,10 +24,22 @@ subscription_path = subscriber.subscription_path("estudio-gcp-301920", "video_co
 
 def callback(message):
     print(f"Recibido mensaje: {message}")
-    data = message.data.decode("utf-8")
-    task_data = json.loads(data)  # Asegúrate de que los mensajes de Pub/Sub estén en formato JSON
-    process_task_from_queue.delay(task_data)  # Usa Celery para procesar la tarea
-    message.ack()
+    try:
+        # Intenta decodificar como JSON si los datos son un string
+        if isinstance(message.data, str):
+            task_data = json.loads(message.data)
+        # Si ya es un diccionario, úsalo directamente
+        elif isinstance(message.data, dict):
+            task_data = message.data
+        else:
+            raise ValueError("Formato de mensaje no reconocido")
+
+        process_task_from_queue.delay(task_data)
+        message.ack()
+
+    except (json.JSONDecodeError, ValueError) as e:
+        print(f"Error al procesar el mensaje: {e}")
+
 
 # Escucha de mensajes
 subscriber.subscribe(subscription_path, callback=callback)
