@@ -5,6 +5,7 @@ import os
 import ffmpeg
 from google.cloud import storage
 import json
+import ast
 
 # Configuración de Celery
 BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379/0')
@@ -26,12 +27,15 @@ def callback(message):
     print(f"Recibido mensaje: {message}")
     print(f"mensaje Data: {message.data}")
     try:
+        # Decodificar de bytes a string
+        message_str = message.data.decode("utf-8")
+
         # Intenta decodificar como JSON si los datos son un string
-        if isinstance(message.data, str):
-            task_data = json.loads(message.data)
+        if isinstance(message_str, str):
+            task_data = json.loads(message_str)
         # Si ya es un diccionario, úsalo directamente
-        elif isinstance(message.data, dict):
-            task_data = message.data
+        elif isinstance(message_str, dict):
+            task_data = ast.literal_eval(message_str)
         else:
             raise ValueError("Formato de mensaje no reconocido")
 
