@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   redis:
+    restart: always
     image: redis:latest
     ports:
       - "6379:6379"
@@ -16,6 +17,7 @@ services:
   #     - redis
 
   worker :
+    restart: always
     image: ghcr.io/felix-orduz/misw4204-worker:latest
     environment:
       CELERY_BROKER_URL: redis://redis:6379/0
