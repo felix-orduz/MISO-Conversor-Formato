@@ -8,6 +8,10 @@ from flask_jwt_extended import jwt_required
 from datetime import datetime
 from resources.gcpfiles import GCPFiles
 import os
+import base64
+import json
+from google.oauth2 import service_account  # Importa service_account desde google.oauth2
+
 
 class Tasks(Resource):
     @jwt_required()  # Requiere autenticación mediante un token Bearer
@@ -82,7 +86,14 @@ class Tasks(Resource):
         original_file_url = f"{server_uri}files/uploaded/{new_task.storedFileName}"
         processed_file_url = f"{server_uri}files/processed/{unique_uuid}.{new_task.newFormat}"
 
-        publisher = pubsub_v1.PublisherClient()
+        credentials_base64 = os.environ['GOOGLE_CREDENTIALS_BASE64']
+        credentials_json = base64.b64decode(credentials_base64).decode('utf-8')
+        credentials_dict = json.loads(credentials_json)
+        credentials = service_account.Credentials.from_service_account_info(credentials_dict)
+
+        # Crea el cliente de Pub/Sub con las credenciales
+        publisher = pubsub_v1.PublisherClient(credentials=credentials)
+
         project_id = "estudio-gcp-301920"
         topic_name = "video_converter"
         topic_path = publisher.topic_path(project_id, topic_name)

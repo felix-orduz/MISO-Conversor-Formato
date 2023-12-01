@@ -12,10 +12,11 @@ RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Make port 5000 available to the world outside this container
-EXPOSE 5000
+# remove expose port for cloud run execution
+
 
 # Define environment variable
 ENV FLASK_APP=app.py
 
 # Run app.py when the container launches
-CMD gunicorn -b 0.0.0.0:5000 app:app
+CMD gunicorn -b 0.0.0.0:${PORT:-5000} app:app
