@@ -11,20 +11,20 @@ from flask import Flask, request
 # Configuración de SQLAlchemy
 app = Flask(__name__)
 
-# DATABASE_URI = os.environ.get('DATABASE_URL')
-# engine = create_engine(DATABASE_URI)
-# metadata = MetaData()
-# metadata.bind = engine
-# task_table = Table('tasks', metadata, autoload_with=engine)
-# app.config['DEBUG'] = True
+DATABASE_URI = os.environ.get('DATABASE_URL')
+engine = create_engine(DATABASE_URI)
+metadata = MetaData()
+metadata.bind = engine
+task_table = Table('tasks', metadata, autoload_with=engine)
+app.config['DEBUG'] = True
 
 
-# try:
-#     # Intentar ejecutar una consulta simple
-#     result = engine.execute("SELECT 1")
-#     print(str(result.fetchone()))
-# except Exception as e:
-#     print(str(e))
+try:
+    # Intentar ejecutar una consulta simple
+    result = engine.execute("SELECT 1")
+    print(str(result.fetchone()))
+except Exception as e:
+    print(str(e))
 
 
 @app.route("/pubsub/push", methods=["POST"])
