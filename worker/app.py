@@ -10,14 +10,22 @@ from flask import Flask, request
 
 # Configuración de SQLAlchemy
 app = Flask(__name__)
+
 DATABASE_URI = os.environ.get('DATABASE_URL')
 engine = create_engine(DATABASE_URI)
 metadata = MetaData()
 metadata.bind = engine
 task_table = Table('tasks', metadata, autoload_with=engine)
+app.config['DEBUG'] = True
 
 
-app = Flask(__name__)
+try:
+    # Intentar ejecutar una consulta simple
+    result = engine.execute("SELECT 1")
+    print(str(result.fetchone()))
+except Exception as e:
+    print(str(e))
+
 
 @app.route("/pubsub/push", methods=["POST"])
 def pubsub_push():
@@ -85,5 +93,6 @@ def process_task_from_queue(task_data):
     conn.commit()
     conn.close()
 
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
+if __name__ == '__main__':
+    print(f"Debug xx mode: {'on' if app.debug else 'off'}")
+    app.run(debug=True)
