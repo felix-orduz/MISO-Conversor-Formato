@@ -6,12 +6,10 @@ import ffmpeg
 from google.cloud import storage
 import json
 import ast
-
-# Configuración de Celery
-BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379/0')
-celery_app = Celery('worker', broker=BROKER_URL)
+from flask import Flask, request
 
 # Configuración de SQLAlchemy
+app = Flask(__name__)
 DATABASE_URI = os.environ.get('DATABASE_URL')
 engine = create_engine(DATABASE_URI)
 metadata = MetaData()
@@ -19,37 +17,27 @@ metadata.bind = engine
 task_table = Table('tasks', metadata, autoload_with=engine)
 
 
-# Configuración de Pub/Sub
-subscriber = pubsub_v1.SubscriberClient()
-subscription_path = subscriber.subscription_path("estudio-gcp-301920", "video_converter-sub")
+app = Flask(__name__)
 
-def callback(message):
-    print(f"Recibido mensaje: {message}")
-    print(f"mensaje Data: {message.data}")
+@app.route("/pubsub/push", methods=["POST"])
+def pubsub_push():
+    envelope = request.get_json()
+    message = envelope['message']
+
+    if not message:
+        return 'Mensaje vacío', 400
+
     try:
-        # Decodificar de bytes a string
-        message_str = message.data.decode("utf-8")
+        # Decodificar de bytes a string (asumiendo que el mensaje viene en base64)
+        message_str = message['data'].decode("utf-8")
         task_data = ast.literal_eval(message_str)
-        # # Si ya es un diccionario, úsalo directamente
-        # if isinstance(message_str, dict):
 
-        # # Intenta decodificar como JSON si los datos son un string
-        # elif isinstance(message_str, str):
-        #     task_data = json.loads(message_str)
-        # else:
-        #     raise ValueError("Formato de mensaje no reconocido")
+        process_task_from_queue(task_data)
+        return 'OK', 200
 
-        process_task_from_queue.delay(task_data)
-        message.ack()
-
-    except (json.JSONDecodeError, ValueError) as e:
+    except Exception as e:
         print(f"Error al procesar el mensaje: {e}")
-
-
-# Escucha de mensajes
-subscriber.subscribe(subscription_path, callback=callback)
-
-
+        return 'Error al procesar el mensaje', 500
 def convert_file_format(storedFileName, newFormat):
 
     bucket_name = os.environ.get('GCP_BUCKET_NAME', 'miso-4204-feog-exp1')
@@ -67,8 +55,6 @@ def convert_file_format(storedFileName, newFormat):
     file_name, _ = os.path.splitext(storedFileName)
     output_file_name = f"{file_name}.{newFormat}"
     output_file = f"/tmp/{output_file_name}"
-    # input_file = os.path.join(os.environ.get('SAVE_PATH', '/file_conversor/uploaded/'), storedFileName)
-    # output_file = os.path.join(os.environ.get('CONVERT_PATH', '/file_conversor/processed/'), file_name +'.'+newFormat )
 
     stream = ffmpeg.input(input_file)
     stream = ffmpeg.output(stream, output_file)
@@ -84,7 +70,6 @@ def convert_file_format(storedFileName, newFormat):
 
     return output_file
 
-@celery_app.task(name='process_task_from_queue')
 def process_task_from_queue(task_data):
     # Convertir el archivo
     converted_file_name = convert_file_format(task_data["storedFileName"], task_data["newFormat"])
@@ -101,4 +86,4 @@ def process_task_from_queue(task_data):
     conn.close()
 
 if __name__ == "__main__":
-    celery_app.start()
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
