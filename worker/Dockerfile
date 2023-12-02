@@ -20,4 +20,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Comando para iniciar tu aplicación
-CMD ["celery", "-A", "app:celery_app", "worker", "--loglevel=info"]
+CMD gunicorn -b 0.0.0.0:${PORT:-5000} app:app
