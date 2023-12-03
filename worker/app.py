@@ -122,33 +122,44 @@ class Ping(Resource):
     def get(self):
         return {'message': 'pong'}, 200
 
-
-class TestDB(Resource):
-    def get(self):
-        try:
-            logging.info("Test Database")
-            # Intentar ejecutar una consulta simple
-            result = engine.execute("SELECT 1")
-            one = result.fetchone()
-            logging.info(str(one))
-            return {'message': str(one)}, 200
-        except Exception as e:
-            logging.error(str(e))
-            return {'error': str(e)}, 500
-
-
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
 api.add_resource(Ping, '/ping')
 api.add_resource(TestDB, '/testdb')
-
 DATABASE_URI = os.environ.get('DATABASE_URL')
 engine = create_engine(DATABASE_URI)
 metadata = MetaData()
 metadata.bind = engine
 task_table = Table('tasks', metadata, autoload_with=engine)
 app.config['DEBUG'] = True
+
+class TestDB(Resource):
+    def get(self):
+        try:
+
+            logging.info("Test Database")
+            with engine.connect() as connection:
+                result = connection.execute("SELECT 1")
+                for row in result:
+                    logging.info(str(row))  # Debería imprimir (1,)
+
+
+            # Intentar ejecutar una consulta simple
+            result = engine.execute("SELECT 1")
+            one = result.fetchone()
+            logging.info(str(one))
+            return {'message': str(one)}, 200
+
+
+        except Exception as e:
+            logging.error(str(e))
+            return {'error': str(e)}, 500
+
+
+
+
+
 
 try:
     logging.info("Test Database")
