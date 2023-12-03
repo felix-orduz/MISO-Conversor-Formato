@@ -116,7 +116,15 @@ import logging
 
 class Ping(Resource):
     def get(self):
-        return {'message': 'pong'}, 200
+        try:
+            # Establecer una conexión y ejecutar una consulta SQL
+            with engine.connect() as connection:
+                result = connection.execute("SELECT * FROM tasks")
+                tasks = [dict(row) for row in result]
+                return {'tasks': tasks}, 200
+        except Exception as e:
+            return {'message': str(e)}, 500
+
 
 logging.basicConfig(level=logging.INFO)
 logging.info("Este es un mensaje de info en el log")
@@ -126,8 +134,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 app.config['DEBUG'] = True
 db = SQLAlchemy()
-
-
 
 
 CORS(app)
