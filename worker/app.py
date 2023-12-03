@@ -170,6 +170,8 @@ def pubsub_push():
 
 
 def process_task_from_queue(task_data):
+
+    logging.info(f"Inicia Conversion: {task_data}")
     # Convertir el archivo
     converted_file_name = convert_file_format(task_data["storedFileName"], task_data["newFormat"])
 
@@ -177,11 +179,12 @@ def process_task_from_queue(task_data):
     try:
         # Encuentra la tarea por su ID y actualiza su estado
         task = Task.query.filter_by(id=task_data["id"]).first()
+        logging.info(f"task: {task}")
         if task:
             task.status = 'processed'
             db.session.commit()
     except Exception as e:
-        print(f"Error al actualizar la tarea: {e}")
+        logging.error(f"Error al actualizar la tarea: {e}")
         db.session.rollback()
 
 def convert_file_format(storedFileName, newFormat):
