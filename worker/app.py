@@ -125,14 +125,19 @@ api = Api(app)
 CORS(app)
 api.add_resource(Ping, '/ping')
 
-
-
 DATABASE_URI = os.environ.get('DATABASE_URL')
 engine = create_engine(DATABASE_URI)
 metadata = MetaData()
 metadata.bind = engine
 task_table = Table('tasks', metadata, autoload_with=engine)
 app.config['DEBUG'] = True
+
+try:
+    # Intentar ejecutar una consulta simple
+    result = engine.execute("SELECT 1")
+    print(str(result.fetchone()))
+except Exception as e:
+    print(str(e))
 
 if __name__ == '__main__':
     print(f"Debug xx mode: {'on' if app.debug else 'off'}")
