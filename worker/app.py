@@ -158,11 +158,11 @@ def pubsub_push():
         message_str = message['data'].decode("utf-8")
         task_data = ast.literal_eval(message_str)
 
-        process_task_from_queue(task_data)
+        # process_task_from_queue(task_data)
         return 'OK', 200
 
     except Exception as e:
-        print(f"Error al procesar el mensaje: {e}")
+        logging.error(f"Error al procesar el mensaje: {e}")
         return 'Error al procesar el mensaje', 500
 
 
