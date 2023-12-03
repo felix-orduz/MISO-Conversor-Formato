@@ -125,8 +125,7 @@ class Ping(Resource):
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
-api.add_resource(Ping, '/ping')
-api.add_resource(TestDB, '/testdb')
+
 DATABASE_URI = os.environ.get('DATABASE_URL')
 engine = create_engine(DATABASE_URI)
 metadata = MetaData()
@@ -158,7 +157,8 @@ class TestDB(Resource):
 
 
 
-
+api.add_resource(Ping, '/ping')
+api.add_resource(TestDB, '/testdb')
 
 
 try:
