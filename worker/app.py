@@ -110,6 +110,9 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_restful import Api, Resource
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine, MetaData, Table, update
+
+
 
 # Definición de la clase Ping
 class Ping(Resource):
@@ -121,6 +124,15 @@ app = Flask(__name__)
 api = Api(app)
 CORS(app)
 api.add_resource(Ping, '/ping')
+
+
+
+DATABASE_URI = os.environ.get('DATABASE_URL')
+engine = create_engine(DATABASE_URI)
+metadata = MetaData()
+metadata.bind = engine
+task_table = Table('tasks', metadata, autoload_with=engine)
+app.config['DEBUG'] = True
 
 if __name__ == '__main__':
     print(f"Debug xx mode: {'on' if app.debug else 'off'}")
