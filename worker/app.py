@@ -118,6 +118,7 @@ class Ping(Resource):
 
 
 app = Flask(__name__)
+api = Api(app)
 CORS(app)
 api.add_resource(Ping, '/ping')
 
