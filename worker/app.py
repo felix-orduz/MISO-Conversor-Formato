@@ -127,6 +127,7 @@ api = Api(app)
 CORS(app)
 
 DATABASE_URI = os.environ.get('DATABASE_URL')
+logging.info(DATABASE_URI)
 engine = create_engine(DATABASE_URI)
 metadata = MetaData()
 metadata.bind = engine
