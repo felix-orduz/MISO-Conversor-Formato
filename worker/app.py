@@ -156,7 +156,8 @@ def pubsub_push():
     try:
         # Decodificar de bytes a string (asumiendo que el mensaje viene en base64)
         message_str = message['data']
-        task_data = ast.literal_eval(message_str)
+        logging.info(f"Mensaje: {message_str}")
+        # task_data = ast.literal_eval(message_str)
 
         # process_task_from_queue(task_data)
         return 'OK', 200
