@@ -119,7 +119,7 @@ class Ping(Resource):
     def get(self):
         return {'message': 'pong'}, 200
 
-
+print("::::::WORKER::::::")
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
@@ -133,6 +133,7 @@ task_table = Table('tasks', metadata, autoload_with=engine)
 app.config['DEBUG'] = True
 
 try:
+    print("Test Database")
     # Intentar ejecutar una consulta simple
     result = engine.execute("SELECT 1")
     print(str(result.fetchone()))
