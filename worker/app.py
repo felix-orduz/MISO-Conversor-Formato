@@ -114,61 +114,26 @@ from sqlalchemy import create_engine, MetaData, Table, update
 
 import logging
 
-logging.basicConfig(level=logging.INFO)
-logging.info("Este es un mensaje de info en el log")
-
-# Definición de la clase Ping
 class Ping(Resource):
     def get(self):
         return {'message': 'pong'}, 200
 
+logging.basicConfig(level=logging.INFO)
+logging.info("Este es un mensaje de info en el log")
+
 app = Flask(__name__)
-api = Api(app)
-CORS(app)
-
-DATABASE_URI = os.environ.get('DATABASE_URL')
-logging.info(DATABASE_URI)
-engine = create_engine(DATABASE_URI)
-metadata = MetaData()
-metadata.bind = engine
-task_table = Table('tasks', metadata, autoload_with=engine)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 app.config['DEBUG'] = True
-
-class TestDB(Resource):
-    def get(self):
-        try:
-
-            logging.info("Test Database")
-            with engine.connect() as connection:
-                result = connection.execute("SELECT 1")
-                for row in result:
-                    logging.info(str(row))  # Debería imprimir (1,)
+db = SQLAlchemy()
 
 
-            # Intentar ejecutar una consulta simple
-            result = engine.execute("SELECT 1")
-            one = result.fetchone()
-            logging.info(str(one))
-            return {'message': str(one)}, 200
 
 
-        except Exception as e:
-            logging.error(str(e))
-            return {'error': str(e)}, 500
-
-
+CORS(app)
+api = Api(app)
 
 api.add_resource(Ping, '/ping')
-api.add_resource(TestDB, '/testdb')
-
-
-try:
-    logging.info("Test Database")
-    # Intentar ejecutar una consulta simple
-    result = engine.execute("SELECT 1")
-    logging.info(str(result.fetchone()))
-except Exception as e:
-    logging.error(str(e))
 
 if __name__ == '__main__':
     print(f"Debug xx mode: {'on' if app.debug else 'off'}")
