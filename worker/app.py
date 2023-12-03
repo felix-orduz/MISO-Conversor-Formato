@@ -121,7 +121,6 @@ class Ping(Resource):
             # Establecer una conexión y ejecutar una consulta SQL
             tasks = Task.query.all()
             return {'tasks': [dict(id=task.id) for task in tasks]}, 200
-
         except Exception as e:
             return {'message': str(e)}, 500
 
@@ -133,12 +132,11 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 # engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 app.config['DEBUG'] = True
-db = SQLAlchemy()
 
 
 CORS(app)
 api = Api(app)
-
+db.init_app(app)
 api.add_resource(Ping, '/ping')
 
 if __name__ == '__main__':
