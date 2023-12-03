@@ -112,7 +112,10 @@ from flask_restful import Api, Resource
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, MetaData, Table, update
 
+import logging
 
+logging.basicConfig(level=logging.INFO)
+logging.info("Este es un mensaje de info en el log")
 
 # Definición de la clase Ping
 class Ping(Resource):
