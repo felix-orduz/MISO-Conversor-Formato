@@ -159,7 +159,8 @@ def pubsub_push():
         message_str = message['data']
         logging.info(f"Mensaje: {message_str}")
         # task_data = ast.literal_eval(message_str)
-        task_data = base64.b64decode(message_str).decode("utf-8")
+        decoded_message = base64.b64decode(message_str).decode("utf-8")
+        task_data = ast.literal_eval(decoded_message)
         logging.info(f"task_data: {task_data}")
         process_task_from_queue(task_data)
         return 'OK', 200
@@ -174,7 +175,7 @@ def process_task_from_queue(task_data):
     logging.info(f"Inicia Conversion: {task_data}")
     # Convertir el archivo
     converted_file_name = convert_file_format(task_data["storedFileName"], task_data["newFormat"])
-
+    logging.info(f"finaliza Conversion: {converted_file_name}")
     # Actualizar la base de datos con el status 'processed'
     try:
         # Encuentra la tarea por su ID y actualiza su estado
