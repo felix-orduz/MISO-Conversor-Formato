@@ -117,6 +117,7 @@ import ffmpeg
 import logging
 import ast
 from google.cloud import storage
+import base64
 
 class Ping(Resource):
     def get(self):
@@ -158,8 +159,9 @@ def pubsub_push():
         message_str = message['data']
         logging.info(f"Mensaje: {message_str}")
         # task_data = ast.literal_eval(message_str)
-
-        # process_task_from_queue(task_data)
+        task_data = base64.b64decode(message_str).decode("utf-8")
+        logging.info(f"task_data: {task_data}")
+        process_task_from_queue(task_data)
         return 'OK', 200
 
     except Exception as e:
